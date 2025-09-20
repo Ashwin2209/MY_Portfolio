@@ -1,168 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF‑8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/x-icon" href="logo.jpg" />
   <title>Ashwinkumar • Portfolio</title>
     <!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-ZsR5...your_integrity_hash..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
   <!-- Bootstrap 4 -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    crossorigin="anonymous" />
 
   <style>
-    :root {
-      --primary: #6c63ff;
-      --secondary: #a5b4fc;
-      --bg: #f5f8ff;
-      --card-bg: #ffffff;
-      --text-dark: #2d3142;
-      --text-mid: #61677c
-    }
+:root {
+  --primary: #6c63ff;
+  --secondary: #a5b4fc;
+  --glass-bg: rgba(0, 0, 0, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text-color: #f1f1f1;
+  --bg: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
+}
 
-    html {
-      scroll-behavior: smooth;
-    }
+html {
+  scroll-behavior: smooth;
+}
 
-    body {
-      background: var(--bg);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-dark);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
+body {
+  background: var(--bg);
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
 
-    .navbar {
-      background: var(--card-bg);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
-    }
+/* Navbar */
+.navbar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  margin: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .6);
+}
 
-    .navbar-brand {
-      font-weight: 600;
-      color: var(--primary) !important;
-    }
+.navbar-brand {
+  font-weight: 600;
+  color: var(--primary) !important;
+}
 
-    .navbar-nav .nav-link {
-      color: var(--text-mid) !important;
-    }
+.navbar-nav .nav-link {
+  color: var(--text-color) !important;
+  transition: color 0.3s;
+}
 
-    .navbar-nav .nav-link:hover {
-      color: var(--primary) !important;
-    }
+.navbar-nav .nav-link:hover {
+  color: var(--secondary) !important;
+}
 
-    .hero {
-      padding: 4rem 0;
-    }
+/* Hero Section */
+.hero {
+  padding: 4rem 0;
+  background-color: transparent; /* transparent background */
+}
 
-    .hero-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
-      padding: 2rem 2.5rem;
-      opacity: 0;
-      transform: translateY(40px);
-      animation: fadeUp 0.9s ease-out forwards .2s;
-    }
+.hero-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, .6);
+  backdrop-filter: blur(18px);
+  padding: 2rem 2.5rem;
+  color: var(--text-color);
+  transition: 0.4s ease;
+}
 
-    .hero-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, .08);
-    }
+.hero-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .8);
+}
 
-    .hero-img {
-      max-width: 340px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
-      opacity: 0;
-      transform: scale(0.9);
-      animation: popIn 1.2s ease-out forwards .4s;
-    }
+/* Floating animation for profile image */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
 
-    .btn‑primary {
-      background: var(--primary);
-      border: none;
-      color: #fff;
-      padding: 0.65rem 1.6rem;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: transform .2s, box-shadow .2s;
-    }
+.hero-img {
+  max-width: 340px;
+  border-radius: 20px;
+  border: 2px solid var(--glass-border);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
+  backdrop-filter: blur(12px);
+  animation: float 4s ease-in-out infinite;
+}
 
-    .btn‑primary:hover {
-      background: var(--secondary);
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 20px rgba(108, 99, 255, .35);
-    }
+.btn-primary {
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  padding: 0.65rem 1.6rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: transform .2s, box-shadow .2s, background 0.3s;
+}
 
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+.btn-primary:hover {
+  background: var(--secondary);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(108, 99, 255, .45);
+}
 
-    @keyframes popIn {
-      60% {
-        opacity: 1;
-        transform: scale(1.04);
-      }
+/* About Me Glass Cards */
+.about_me_card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.9rem 2.1rem;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .6);
+  backdrop-filter: blur(16px);
+  color: var(--text-color);
+  transition: 0.4s ease;
+}
 
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+.about_me_card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-top: 4px solid var(--primary);
+  box-shadow: 0 16px 40px rgba(108, 99, 255, 0.35);
+}
 
-    .vl {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 3px;
-      background: linear-gradient(to bottom, transparent 0%, var(--primary) 50%, transparent 100%);
-      opacity: .25;
-      z-index: -1;
-    }
+.about_me_card h1 {
+  color: var(--text-color);
+}
 
-    .about_me_card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 1.9rem 2.1rem;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, .05);
-      opacity: 0;
-      transform: translateY(40px);
-      animation: fadeUp .85s ease-out forwards;
-      border-top: 4px solid transparent;
-    }
+.about_me_card:hover h1 {
+  color: var(--primary);
+}
 
-    .about_me_card:nth-of-type(1) { animation-delay: .15s; }
-    .about_me_card:nth-of-type(2) { animation-delay: .30s; }
-    .about_me_card:nth-of-type(3) { animation-delay: .45s; }
-    .about_me_card:nth-of-type(4) { animation-delay: .60s; }
+/* Contact */
+#contact {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  color: var(--text-color);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .7);
+  transition: background 0.4s ease, color 0.4s ease;
+}
 
-    .about_me_card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 16px 40px rgba(108, 99, 255, 0.15);
-      border-top: 4px solid var(--primary);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-
-    .about_me_card:hover h1 {
-      color: var(--primary);
-      transition: color 0.3s ease;
-    }
-
-    @media (max-width: 767.98px) {
-      .hero { padding: 3rem 0 2rem; }
-      .hero-img { margin-top: 2rem; }
-      .vl { display: none; }
-    }
-
-    .social-links {
+/* Social Links */
+.social-links {
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -170,8 +160,8 @@
 }
 
 .social-links a {
-  color: var(--text-mid);
-  font-size: 1.5rem;
+  color: var(--text-color);
+  font-size: 1.6rem;
   transition: color 0.3s, transform 0.3s;
 }
 
@@ -207,9 +197,9 @@
         <div class="col-md-6">
           <div class="hero-card">
             <h1 class="mb-3">Hi, I’m <span style="color:var(--primary);">Ashwinkumar</span> 👋</h1>
-            <h5 class="mb-3">Junior Full‑Stack Developer</h5>
-            <p class="mb-4">I build responsive, human‑centred web apps with clean, maintainable code. I love turning ideas into delightful digital experiences while continuously learning.</p>
-            <a href="resume.jpg" class="btn btn‑primary">Download Resume</a>
+            <h5 class="mb-3">Junior Full-Stack Developer</h5>
+            <p class="mb-4">I build responsive, human-centred web apps with clean, maintainable code. I love turning ideas into delightful digital experiences while continuously learning.</p>
+            <a href="resume.jpg" class="btn btn-primary">Download Resume</a>
           </div>
         </div>
         <div class="col-md-5 text-center">
@@ -234,7 +224,7 @@
     <div class=" px-3 px-md-5 my-4">
       <div class="text-left card about_me_card shadow-lg">
         <h1>Skills / Strengths</h1>
-        <p>I enjoy crafting responsive, user‑friendly applications. My toolbox includes HTML5, CSS3, JavaScript and modern frameworks. Continuous learning and best practices guide my workflow.</p>
+        <p>I enjoy crafting responsive, user-friendly applications. My toolbox includes HTML5, CSS3, JavaScript and modern frameworks. Continuous learning and best practices guide my workflow.</p>
       </div>
     </div>
 
@@ -246,22 +236,23 @@
     <div class=" px-3 px-md-5 my-4">
       <div class="text-left card about_me_card shadow-lg">
         <h1>Goals / Ambitions</h1>
-        <p>I aim to become a versatile full‑stack developer, delivering impactful digital products, solving real-world problems, and collaborating effectively.</p>
+        <p>I aim to become a versatile full-stack developer, delivering impactful digital products, solving real-world problems, and collaborating effectively.</p>
       </div>
     </div>
   </section>
-<section id="contact" style="padding: 40px 20px; background-color: #f9f9f9;">
+
+<section id="contact" style="padding: 40px 20px; background-color: transparent;">
   <div style="max-width: 800px; margin: auto; text-align: center;">
     <h2 style="font-size: 2rem; margin-bottom: 20px;">Contact Me</h2>
     <p style="margin-bottom: 10px;"><strong>Email:</strong> <a href="mailto:aahwinramalakshmi@gmail.com">aahwinramalakshmi@gmail.com</a></p>
     <p style="margin-bottom: 10px;"><strong>Phone:</strong> +91-9043328172</p>
   </div>
 </section>
-  <!-- Contact Section -->
+
  <!-- Social Media Section -->
 <section class="pb-4">
   <div class="container text-center">
-    <h5 style="color: var(--text-mid); font-weight: 500;">Follow me on</h5>
+    <h5 style="color: var(--text-color); font-weight: 500;">Follow me on</h5>
     <div class="social-links">
       <a href="https://github.com/Ashwin2209" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
       <a href="https://www.linkedin.com/in/ashwinkumar-s-b3a043314/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
@@ -271,16 +262,9 @@
   </div>
 </section>
 
-
   <!-- JS Scripts -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
