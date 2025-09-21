@@ -129,6 +129,16 @@
       box-shadow: 0 16px 40px rgba(108, 99, 255, 0.35);
     }
 
+    /* NEW: Hover effect for headings inside about cards */
+    .about_me_card h1,
+    .about_me_card h3 {
+      transition: color 0.3s ease;
+    }
+    .about_me_card:hover h1,
+    .about_me_card:hover h3 {
+      color: var(--primary);
+    }
+
     #contact {
       max-width: 900px;
       margin: 40px auto;
@@ -209,7 +219,7 @@
     </div>
   </section>
 
-  <!-- About Me Section (Stacked Cards as Original) -->
+  <!-- About Me Section -->
   <section id="about" class="position-relative">
     <div class="about_me_container text-center py-4 px-2 px-md-5">
       <h1 style="color:var(--primary);">About Me</h1>
