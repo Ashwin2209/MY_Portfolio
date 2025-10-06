@@ -129,7 +129,6 @@
       box-shadow: 0 16px 40px rgba(108, 99, 255, 0.35);
     }
 
-    /* NEW: Hover effect for headings inside about cards */
     .about_me_card h1,
     .about_me_card h3 {
       transition: color 0.3s ease;
@@ -161,6 +160,43 @@
     .social-links a { color: var(--text-color); font-size: 1.6rem; transition: color 0.3s, transform 0.3s; }
     .social-links a:hover { color: var(--primary); transform: scale(1.2); }
 
+    /* === Technical Skills === */
+    .skill-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .skill-logo {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+    .skill-icon p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-color);
+      font-weight: 500;
+    }
+    .skill-icon:hover .skill-logo {
+      transform: scale(1.15);
+      filter: drop-shadow(0 6px 12px var(--primary));
+    }
+    .skill-icon:hover p {
+      color: var(--primary);
+    }
+    @media (max-width: 576px) {
+      .skill-logo {
+        width: 50px;
+        height: 50px;
+      }
+      .skill-icon p {
+        font-size: 0.85rem;
+      }
+    }
+
     /* Responsive adjustments */
     @media (max-width: 992px) {
       .hero { padding: 3rem 0; }
@@ -171,7 +207,6 @@
       .hero-card { margin-bottom: 1.5rem; }
       .hero-img { max-width: 250px; margin: 20px auto 0; }
       #contact { padding: 25px 15px; }
-      #contact h2 { font-size: 1.6rem; }
       .navbar { margin: 8px; }
     }
     @media (max-width: 576px) {
@@ -179,8 +214,24 @@
       .about_me_card { padding: 1.3rem 1.5rem; }
       .social-links { gap: 12px; }
     }
+
+    .light-theme .hero-card,
+    .light-theme .about_me_card,
+    .light-theme #contact {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+    .light-theme .about_me_card:hover {
+      box-shadow: 0 8px 20px rgba(155, 107, 214, 0.25) !important;
+    }
+    .light-theme .hero-img {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+    }
+    .light-theme .navbar {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    }
   </style>
 </head>
+
 <body>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light">
@@ -192,6 +243,7 @@
       <div class="collapse navbar-collapse" id="nav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item"><a class="nav-link active" href="#about">About me</a></li>
+          <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
           <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
         </ul>
@@ -254,7 +306,74 @@
     </div>
   </section>
 
-  <!-- Projects Section -->
+  <!-- Technical Skills Section -->
+  <section id="skills" class="position-relative py-5">
+    <div class="container text-center">
+      <h1 style="color:var(--primary); margin-bottom: 2rem;">Technical Skills</h1>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="about_me_card">
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" class="skill-logo">
+                <p>HTML5</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" class="skill-logo">
+                <p>CSS3</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="skill-logo">
+                <p>JavaScript</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="skill-logo">
+                <p>Python</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" class="skill-logo">
+                <p>MySQL</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" class="skill-logo">
+                <p>Figma</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" class="skill-logo">
+                <p>Git</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="skill-logo">
+                <p>GitHub</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" class="skill-logo">
+                <p>Bootstrap</p>
+              </div>
+
+              <div class="skill-icon m-3">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code" class="skill-logo">
+                <p>VS Code</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section with GitHub Buttons -->
   <section id="projects" class="position-relative py-5">
     <div class="container text-center">
       <h1 style="color:var(--primary); margin-bottom: 2rem;">My Projects</h1>
@@ -262,7 +381,7 @@
         <div class="col-md-4 mb-4">
           <div class="about_me_card h-100">
             <h3>Portfolio Website</h3>
-            <p>My personal portfolio website built with HTML, CSS, JavaScript & Bootstrap showcasing projects and skills.</p>
+            <p>Designed and built a responsive personal portfolio using HTML, CSS, and JavaScript, showcasing skills and projects with an elegant dark/light theme.</p>
             <a href="https://github.com/Ashwin2209/MY_Portfolio" target="_blank" class="btn btn-primary mt-2">View on GitHub</a>
           </div>
         </div>
@@ -287,36 +406,30 @@
   <!-- Contact Section -->
   <section id="contact">
     <h2>Contact Me</h2>
-    <div class="contact-info">
-      <p><strong>Email:</strong> 
-        <a href="mailto:aahwinramalakshmi@gmail.com">
-          aahwinramalakshmi@gmail.com
-        </a>
-      </p>
-      <p><strong>Phone:</strong> +91-9043328172</p>
-    </div>
+    <p>Have a project idea or just want to connect? Reach out anytime!</p>
+    <a href="mailto:ashwinkumarm2005@gmail.com" class="btn btn-primary">Send Email</a>
   </section>
 
-  <!-- Social Media Section -->
-  <section class="follow-section">
-    <h5 style="color: var(--text-color); font-weight: 500;">Follow me on</h5>
+  <!-- Social Links -->
+  <div class="follow-section">
+    <h2 style="color:var(--primary);">Follow Me</h2>
     <div class="social-links">
-      <a href="https://github.com/Ashwin2209" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-      <a href="https://www.linkedin.com/in/ashwinkumar-s-b3a043314/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-      <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://www.instagram.com/itz__ashwin.001/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/home" target="_blank"><i class="fab fa-twitter"></i></a>
     </div>
-  </section>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+    });
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
-
-  <script>
-    const themeToggle = document.getElementById("themeToggle");
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("light-theme");
-    });
-  </script>
 </body>
 </html>
