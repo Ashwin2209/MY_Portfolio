@@ -1,436 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="logo.jpg" />
-  <title>Ashwinkumar • Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashwinkumar | Full Stack Developer</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- CSS Variables --- */
+        :root {
+            /* Light Theme */
+            --primary: #6d28d9;
+            --primary-hover: #5b21b6;
+            --bg-body: #e9e9f5;       
+            --bg-card: rgba(255, 255, 255, 0.75);
+            --bg-nav: rgba(255, 255, 255, 0.90);
+            --text-main: #1e1b4b;
+            --text-muted: #581c87;
+            --border-color: #c4b5fd;
+            --shadow: 0 8px 32px rgba(109, 40, 217, 0.15); 
+            --particle-color: #8b5cf6;
+            --line-color: rgba(109, 40, 217, 0.15); 
+            --cursor-color: #6d28d9;
+        }
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
-  <!-- Bootstrap 4 -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous" />
+        /* Dark Theme */
+        body.dark-theme {
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --bg-body: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.75); 
+            --bg-nav: rgba(15, 23, 42, 0.95);
+            --text-main: #f8fafc;     
+            --text-muted: #cbd5e1;    
+            --border-color: #334155;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+            --particle-color: #94a3b8;
+            --line-color: rgba(148, 163, 184, 0.1);
+            --cursor-color: #818cf8;
+        }
 
-  <style>
-    :root {
-      --primary: #6c63ff;
-      --secondary: #a5b4fc;
-      --glass-bg: rgba(0, 0, 0, 0.25);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-color: #f1f1f1;
-      --bg: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
-    }
+        /* --- STRICT SCROLLBAR HIDING --- */
+        ::-webkit-scrollbar { display: none; width: 0; background: transparent; }
+        html, body {
+            scrollbar-width: none;       
+            -ms-overflow-style: none;    
+            overflow-x: hidden;          
+            overflow-y: scroll;          
+            width: 100%;
+        }
 
-    .light-theme {
-      --primary: #9b6bd6;
-      --secondary: #c3aed6;
-      --glass-bg: rgba(255, 255, 255, 0.7);
-      --glass-border: rgba(155, 107, 214, 0.25);
-      --text-color: #3b2c4a;
-      --bg: linear-gradient(135deg, #f3e8ff 0%, #e0d4f7 100%);
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.5s ease, color 0.3s ease;
+            position: relative;
+            cursor: none; 
+        }
 
-    html { scroll-behavior: smooth; }
+        a, button, .card-custom, .about_me_card, .skill-icon {
+            cursor: none !important;
+        }
 
-    body {
-      background: var(--bg);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-color);
-      line-height: 1.6;
-      overflow-x: hidden;
-      transition: background 0.4s ease, color 0.4s ease;
-    }
+        /* --- ENTRANCE ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .navbar {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      margin: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, .6);
-    }
-    .navbar-brand { font-weight: 600; color: var(--primary) !important; }
-    .navbar-nav .nav-link { color: var(--text-color) !important; transition: color 0.3s; }
-    .navbar-nav .nav-link:hover { color: var(--secondary) !important; }
+        .animate-hero { opacity: 0; animation: fadeInUp 0.8s ease forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-250 { animation-delay: 0.25s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .navbar-animate { animation: slideDown 0.8s ease forwards; }
 
-    body:not(.light-theme) .navbar-toggler-icon {
-      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/ %3E%3C/svg%3E");
-    }
+        /* --- FLOATING IMAGE --- */
+        @keyframes floatImage {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
 
-    .theme-btn {
-      background: var(--primary);
-      border: none;
-      border-radius: 8px;
-      padding: 0.4rem 0.8rem;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .theme-btn:hover { background: var(--secondary); }
+        /* --- TYPEWRITER --- */
+        .typewriter-container {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            min-height: 36px;
+        }
 
-    .hero { padding: 4rem 0; background-color: transparent; }
-    .hero-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      box-shadow: 0 8px 40px rgba(0, 0, 0, .6);
-      backdrop-filter: blur(18px);
-      padding: 2rem 2.5rem;
-      color: var(--text-color);
-      transition: 0.4s ease;
-      text-align: center;
-    }
-    .hero-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, .8);
-    }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-    .hero-img {
-      max-width: 100%;
-      border-radius: 20px;
-      border: 2px solid var(--glass-border);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
-      backdrop-filter: blur(12px);
-      animation: float 4s ease-in-out infinite;
-      margin-top: 20px;
-     
-    }
-    .btn-primary {
-      background: var(--primary);
-      border: none;
-      color: #fff;
-      padding: 0.65rem 1.6rem;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: transform .2s, box-shadow .2s, background 0.3s;
-    }
-    .btn-primary:hover {
-      background: var(--secondary);
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 20px rgba(108, 99, 255, .45);
-    }
+        .typewriter-text {
+            color: var(--primary); 
+            border-right: 3px solid var(--primary); 
+            padding-right: 5px;
+            animation: blink-caret 0.75s step-end infinite;
+        }
 
-    .about_me_card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 1.9rem 2.1rem;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, .6);
-      backdrop-filter: blur(16px);
-      color: var(--text-color);
-      transition: 0.4s ease;
-      margin-bottom: 20px;
-    }
-    .about_me_card:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-top: 4px solid var(--primary);
-      box-shadow: 0 16px 40px rgba(108, 99, 255, 0.35);
-    }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--primary); }
+        }
 
-    .about_me_card h1,
-    .about_me_card h3 {
-      transition: color 0.3s ease;
-    }
-    .about_me_card:hover h1,
-    .about_me_card:hover h3 {
-      color: var(--primary);
-    }
+        /* --- SCROLL REVEAL --- */
+        .reveal {
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-left   { transform: translateX(-100px); }
+        .reveal-right  { transform: translateX(100px); }
+        .reveal-top    { transform: translateY(-80px); }
+        .reveal-bottom { transform: translateY(80px); }
+        .reveal-zoom   { transform: scale(0.8); }
 
-    #contact {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 40px 20px;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      backdrop-filter: blur(14px);
-      color: var(--text-color);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, .7);
-      text-align: center;
-    }
+        .reveal.active {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
 
-    .follow-section {
-      max-width: 900px;
-      margin: 0 auto 50px auto;
-      text-align: center;
-    }
-    .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 1.5rem; }
-    .social-links a { color: var(--text-color); font-size: 1.6rem; transition: color 0.3s, transform 0.3s; }
-    .social-links a:hover { color: var(--primary); transform: scale(1.2); }
+        /* --- Custom Cursor --- */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--cursor-color); }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 2px solid var(--cursor-color);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        body.hovering .cursor-outline {
+            width: 70px; height: 70px;
+            background-color: rgba(109, 40, 217, 0.1); border-color: transparent;
+        }
+        body.dark-theme.hovering .cursor-outline {
+            background-color: rgba(129, 140, 248, 0.1);
+        }
 
-    /* === Technical Skills === */
-    .skill-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: transform 0.3s ease, color 0.3s ease;
-    }
-    .skill-logo {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 10px;
-      transition: transform 0.3s ease, filter 0.3s ease;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    }
-    .skill-icon p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: var(--text-color);
-      font-weight: 500;
-    }
-    .skill-icon:hover .skill-logo {
-      transform: scale(1.15);
-      filter: drop-shadow(0 6px 12px var(--primary));
-    }
-    .skill-icon:hover p {
-      color: var(--primary);
-    }
-    @media (max-width: 576px) {
-      .skill-logo {
-        width: 50px;
-        height: 50px;
-      }
-      .skill-icon p {
-        font-size: 0.85rem;
-      }
-    }
+        /* --- Canvas --- */
+        #canvas-bg {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: -1;
+        }
 
-    /* Responsive adjustments */
-    @media (max-width: 992px) {
-      .hero { padding: 3rem 0; }
-      .hero-card { padding: 1.8rem 2rem; }
-    }
-    @media (max-width: 768px) {
-      .hero-card h1 { font-size: 1.8rem; }
-      .hero-card { margin-bottom: 1.5rem; }
-      .hero-img { max-width: 250px; margin: 20px auto 0; }
-      #contact { padding: 25px 15px; }
-      .navbar { margin: 8px; }
-    }
-    @media (max-width: 576px) {
-      .hero-card { padding: 1.5rem; }
-      .about_me_card { padding: 1.3rem 1.5rem; }
-      .social-links { gap: 12px; }
-    }
+        h1, h2, h3, h4, h5 { font-weight: 700; color: var(--text-main); }
+        a { text-decoration: none; }
 
-    .light-theme .hero-card,
-    .light-theme .about_me_card,
-    .light-theme #contact {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-    }
-    .light-theme .about_me_card:hover {
-      box-shadow: 0 8px 20px rgba(155, 107, 214, 0.25) !important;
-    }
-    .light-theme .hero-img {
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
-    }
-    .light-theme .navbar {
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
-    }
-  </style>
+        /* --- Wave Animation --- */
+        .wave-emoji {
+            display: inline-block;
+            animation: wave-animation 2.5s infinite;
+            transform-origin: 70% 70%;
+        }
+        @keyframes wave-animation {
+            0%, 60%, 100% { transform: rotate( 0.0deg) }
+            10%, 30% { transform: rotate(14.0deg) }
+            20%, 40% { transform: rotate(-8.0deg) }
+            50% { transform: rotate(10.0deg) }
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background-color: var(--bg-nav);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease; padding: 1rem 0;
+        }
+        .navbar-brand { font-weight: 700; color: var(--text-main) !important; }
+        .nav-link {
+            color: var(--text-main) !important; opacity: 0.7;
+            font-weight: 500; transition: 0.2s;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; opacity: 1; }
+
+        .theme-btn {
+            background: transparent; border: 1px solid var(--border-color);
+            color: var(--text-main); width: 40px; height: 40px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .theme-btn:hover {
+            background-color: var(--bg-card); border-color: var(--primary); color: var(--primary);
+        }
+
+        /* --- Cards --- */
+        .card-custom, .about_me_card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 2rem; transition: 0.3s; height: 100%;
+            box-shadow: var(--shadow);
+        }
+        .card-custom:hover, .about_me_card:hover {
+            transform: translateY(-5px) scale(1.02) !important; 
+            border-color: var(--primary);
+            z-index: 10;
+        }
+        .about_me_card { text-align: left; }
+        .about_me_card h1 { font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .about_me_card p { color: var(--text-main); opacity: 0.85; line-height: 1.6; }
+
+        /* --- SKILL ICONS STYLING --- */
+        .skill-icon {
+            text-align: center;
+            width: 100px;
+            transition: 0.3s;
+        }
+        .skill-logo {
+            width: 60px; height: 60px; margin-bottom: 15px; transition: transform 0.3s ease;
+        }
+        .card-custom:hover .skill-logo {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary); color: white;
+            padding: 12px 28px; border-radius: 8px; font-weight: 500;
+            border: none; transition: 0.3s;
+        }
+        .btn-primary-custom:hover { background-color: var(--primary-hover); transform: translateY(-2px); color: white; }
+        .btn-outline-custom {
+            background: transparent; border: 2px solid var(--border-color);
+            color: var(--text-main); padding: 10px 28px;
+            border-radius: 8px; font-weight: 500; transition: 0.3s;
+        }
+        .btn-outline-custom:hover { border-color: var(--primary); color: var(--primary); }
+
+        .section-padding { padding: 5rem 0; }
+        .hero-section { padding: 8rem 0 5rem 0; }
+
+        .profile-img {
+            width: 100%; 
+            max-width: 350px; 
+            border-radius: 20px;
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--border-color);
+            animation: floatImage 6s ease-in-out infinite; 
+        }
+        
+        .divider {
+            width: 60px; height: 4px; background-color: var(--primary);
+            margin: 10px 0 30px 0; border-radius: 2px;
+        }
+        .tech-tag {
+            background: rgba(109, 40, 217, 0.1); color: var(--primary);
+            padding: 5px 12px; border-radius: 50px; font-size: 0.8rem;
+            font-weight: 600; margin-right: 5px; border: 1px solid var(--border-color);
+        }
+        
+        /* Updated Social Link Styling */
+        .social-link {
+            width: 45px; height: 45px; display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; background: var(--bg-card);
+            border: 1px solid var(--border-color); color: var(--text-main);
+            font-size: 1.2rem; margin: 0 5px; transition: 0.3s;
+        }
+        .social-link:hover {
+            background: var(--primary); border-color: var(--primary); color: white;
+            transform: translateY(-3px);
+        }
+        
+        footer {
+            border-top: 1px solid var(--border-color); padding: 2rem 0;
+            text-align: center; background: var(--bg-nav); color: var(--text-muted);
+        }
+        .text-muted { color: var(--text-muted) !important; }
+
+        @media (max-width: 768px) {
+            .hero-section { text-align: center; padding-top: 7rem; }
+            .profile-img { margin-top: 3rem; }
+            body, a, button, .card-custom, .about_me_card, .skill-icon { cursor: auto !important; }
+            .cursor-dot, .cursor-outline { display: none; }
+            .typewriter-container { display: block; text-align: center; }
+        }
+    </style>
 </head>
-
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
-      <a class="navbar-brand" href="#">Ashwinkumar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="nav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a class="nav-link active" href="#about">About me</a></li>
-          <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
-          <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-        </ul>
-        <button class="theme-btn ml-3" id="themeToggle"><i class="fas fa-adjust"></i></button>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="row align-items-center justify-content-center">
-        <div class="col-lg-6 col-md-8">
-          <div class="hero-card">
-            <h1 class="mb-3">Hi, I’m <span style="color:var(--primary);">Ashwinkumar</span>👋</h1>
-            <h5 class="mb-3">Junior Full-Stack Developer</h5>
-            <p class="mb-4">I build responsive, human-centred web apps with clean, maintainable code. I love turning ideas into delightful digital experiences while continuously learning.</p>
-            <a href="resume.jpg" class="btn btn-primary">Download Resume</a>
-          </div>
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-animate">
+        <div class="container">
+            <a class="navbar-brand" href="#">Ashwinkumar.</a>
+            <div class="d-flex align-items-center order-lg-3 ms-lg-3">
+                <button class="theme-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button class="navbar-toggler ms-2 shadow-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                    <i class="fas fa-bars" style="color: var(--text-main);"></i>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link mx-2" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link mx-2" href="#skills">Skills</a></li>
+                    <li class="nav-item"><a class="nav-link mx-2" href="#projects">Work</a></li>
+                    <li class="nav-item"><a class="nav-link mx-2" href="#contact">Contact</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="col-lg-5 col-md-8 text-center">
-          <img src="image.jpg" alt="Profile picture" class="hero-img" />
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    
+                    <h1 class="display-4 fw-bold mb-3 mt-2 animate-hero delay-100">
+                        I'm Ashwinkumar <span class="wave-emoji">👋</span>
+                    </h1>
+
+                    <div class="typewriter-container animate-hero delay-250">
+                        <span class="typewriter-text" id="typewriter-text"></span>
+                    </div>
+                    
+                    <p class="lead mb-4 text-muted animate-hero delay-300">
+                        I build responsive, human-centred web apps with clean, maintainable code. I love turning ideas into delightful digital experiences while continuously learning.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start animate-hero delay-400">
+                        <a href="#projects" class="btn btn-primary-custom">View Projects</a>
+                        <a href="resume.jpg" class="btn btn-outline-custom"><i class="fas fa-download me-2"></i>CV</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center animate-hero delay-200">
+                    <img src="image.jpg" alt="Profile" class="profile-img">
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- About Me Section -->
-  <section id="about" class="position-relative">
-    <div class="about_me_container text-center py-4 px-2 px-md-5">
-      <h1 style="color:var(--primary);">About Me</h1>
-    </div>
-    <div class="container text-center">
-      <div class="row">
-        <div class="col-12">
-          <div class="about_me_card">
-            <h1>Profession / Studies</h1>
-            <p>I am currently pursuing a B.Tech in Information Technology, building a strong foundation in software development, data structures, algorithms, databases, networking, and modern web technologies.</p>
-          </div>
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="mb-5 text-center reveal reveal-zoom">
+                <h2>About Me</h2>
+                <div class="divider mx-auto"></div>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 reveal reveal-left">
+                    <div class="about_me_card">
+                        <h1>Profession / Studies</h1>
+                        <p>I am currently pursuing a B.Tech in Information Technology, building a strong foundation in software development, data structures, algorithms, databases, networking, and modern web technologies.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 reveal reveal-top">
+                    <div class="about_me_card">
+                        <h1>Skills / Strengths</h1>
+                        <p>I enjoy crafting responsive, user-friendly applications. My toolbox includes HTML5, CSS3, JavaScript and modern frameworks. Continuous learning and best practices guide my workflow.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 reveal reveal-bottom">
+                    <div class="about_me_card">
+                        <h1>Interests / Hobbies</h1>
+                        <p>Beyond tech, I explore UI/UX trends, listen to music, enjoy nature walks, and spend time with friends and family.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 reveal reveal-right">
+                    <div class="about_me_card">
+                        <h1>Goals / Ambitions</h1>
+                        <p>I aim to become a versatile full-stack developer, delivering impactful digital products, solving real-world problems, and collaborating effectively.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-12">
-          <div class="about_me_card">
-            <h1>Skills / Strengths</h1>
-            <p>I enjoy crafting responsive, user-friendly applications. My toolbox includes HTML5, CSS3, JavaScript and modern frameworks. Continuous learning and best practices guide my workflow.</p>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="about_me_card">
-            <h1>Interests / Hobbies</h1>
-            <p>Beyond tech, I explore UI/UX trends, listen to music, enjoy nature walks, and spend time with friends and family.</p>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="about_me_card">
-            <h1>Goals / Ambitions</h1>
-            <p>I aim to become a versatile full-stack developer, delivering impactful digital products, solving real-world problems, and collaborating effectively.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Technical Skills Section -->
-  <section id="skills" class="position-relative py-5">
-    <div class="container text-center">
-      <h1 style="color:var(--primary); margin-bottom: 2rem;">Technical Skills</h1>
+    <section id="skills" class="section-padding">
+        <div class="container">
+            <div class="mb-5 reveal reveal-zoom">
+                <h2>Technical Expertise</h2>
+                <div class="divider"></div>
+            </div>
+            
+            <div class="row g-4 justify-content-center">
+                
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-left">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" class="skill-logo">
+                        <h5 class="mt-2">HTML5</h5>
+                    </div>
+                </div>
 
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <div class="about_me_card">
-            <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-top">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" class="skill-logo">
+                        <h5 class="mt-2">CSS3</h5>
+                    </div>
+                </div>
 
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" class="skill-logo">
-                <p>HTML5</p>
-              </div>
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-bottom">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="skill-logo">
+                        <h5 class="mt-2">Python</h5>
+                    </div>
+                </div>
 
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" class="skill-logo">
-                <p>CSS3</p>
-              </div>
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-right">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" class="skill-logo">
+                        <h5 class="mt-2">Bootstrap</h5>
+                    </div>
+                </div>
 
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="skill-logo">
-                <p>JavaScript</p>
-              </div>
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-left">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="skill-logo">
+                        <h5 class="mt-2">GitHub</h5>
+                    </div>
+                </div>
 
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="skill-logo">
-                <p>Python</p>
-              </div>
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-bottom">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" class="skill-logo">
+                        <h5 class="mt-2">Figma</h5>
+                    </div>
+                </div>
 
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" class="skill-logo">
-                <p>MySQL</p>
-              </div>
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-top">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code" class="skill-logo">
+                        <h5 class="mt-2">VS Code</h5>
+                    </div>
+                </div>
 
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" class="skill-logo">
-                <p>Figma</p>
-              </div>
-
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" class="skill-logo">
-                <p>Git</p>
-              </div>
-
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="skill-logo">
-                <p>GitHub</p>
-              </div>
-
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" class="skill-logo">
-                <p>Bootstrap</p>
-              </div>
-
-              <div class="skill-icon m-3">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code" class="skill-logo">
-                <p>VS Code</p>
-              </div>
+                <div class="col-6 col-md-4 col-lg-3 reveal reveal-right">
+                    <div class="card-custom text-center py-4">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" class="skill-logo">
+                        <h5 class="mt-2">MySQL</h5>
+                    </div>
+                </div>
 
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Projects Section with GitHub Buttons -->
-  <section id="projects" class="position-relative py-5">
-    <div class="container text-center">
-      <h1 style="color:var(--primary); margin-bottom: 2rem;">My Projects</h1>
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <div class="about_me_card h-100">
-            <h3>Portfolio Website</h3>
-            <p>Designed and built a responsive personal portfolio using HTML, CSS, and JavaScript, showcasing skills and projects with an elegant dark/light theme.</p>
-            <a href="https://github.com/Ashwin2209/MY_Portfolio" target="_blank" class="btn btn-primary mt-2">View on GitHub</a>
-          </div>
+    <section id="projects" class="section-padding">
+        <div class="container">
+            <div class="mb-5 reveal reveal-zoom">
+                <h2>Featured Projects</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 reveal reveal-left">
+                    <div class="card-custom d-flex flex-column">
+                        <h4 class="mb-3">Foodie Menu</h4>
+                        <p class="text-muted flex-grow-1">A responsive digital menu application allowing users to browse and filter restaurant items by category.</p>
+                        <div class="mb-3">
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">HTML/CSS</span>
+                        </div>
+                        <a href="https://github.com/Ashwin2209/Food-menu" target="_blank" style="color: var(--primary); font-weight: 600;">View Code <i class="fas fa-arrow-right small ms-1"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 reveal reveal-zoom">
+                    <div class="card-custom d-flex flex-column">
+                        <h4 class="mb-3">TN WebApp</h4>
+                        <p class="text-muted flex-grow-1">Automated grievance system that generates formal letters from user input and handles email dispatching.</p>
+                        <div class="mb-3">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Automation</span>
+                        </div>
+                        <a href="https://github.com/Ashwin2209/SAmple" target="_blank" style="color: var(--primary); font-weight: 600;">View Code <i class="fas fa-arrow-right small ms-1"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 reveal reveal-right">
+                    <div class="card-custom d-flex flex-column">
+                        <h4 class="mb-3">Portfolio</h4>
+                        <p class="text-muted flex-grow-1">This professional portfolio website featuring dark mode, interactive canvas background, and clean UI.</p>
+                        <div class="mb-3">
+                            <span class="tech-tag">Bootstrap 5</span>
+                            <span class="tech-tag">Design</span>
+                        </div>
+                        <a href="https://github.com/Ashwin2209/MY_Portfolio" target="_blank" style="color: var(--primary); font-weight: 600;">View Code <i class="fas fa-arrow-right small ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <div class="about_me_card h-100">
-            <h3>Foodie Menu</h3>
-            <p>Foodie Menu is a sleek, responsive web app that lets users browse restaurant menus, filter by category, and explore dishes with ease. Built with HTML, CSS, JavaScript, and Bootstrap.</p>
-            <a href="https://github.com/Ashwin2209/Food-menu" target="_blank" class="btn btn-primary mt-2">View on GitHub</a>
-          </div>
+    </section>
+
+    <section id="contact" class="section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 reveal reveal-bottom">
+                    <div class="card-custom text-center p-5">
+                        <h2 class="mb-3">Let's Work Together</h2>
+                        <p class="text-muted mb-4">I am currently available for freelance projects and full-time opportunities.</p>
+                        <a href="mailto:aahwinramalakshmi@gmail.com" class="btn btn-primary-custom btn-lg mb-4">
+                            <i class="fas fa-envelope me-2"></i> Get In Touch
+                        </a>
+                        
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a href="https://github.com/" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://www.instagram.com/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="https://x.com/home" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <div class="about_me_card h-100">
-            <h3>TN webApp</h3>
-            <p>A web app that streamlines public complaints by creating formatted letters and emailing them to the right authorities. Responsive and interactive using HTML, CSS, and JS.</p>
-            <a href="https://github.com/Ashwin2209/SAmple" target="_blank" class="btn btn-primary mt-2">View on GitHub</a>
-          </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <small>&copy; 2025 Ashwinkumar. Built with Professionalism.</small>
         </div>
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- Contact Section -->
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <p>Have a project idea or just want to connect? Reach out anytime!</p>
-    <a href="mailto:aahwinramalakshmi@gmail.com" class="btn btn-primary">Send Email</a>
-  </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // --- 1. RE-TRIGGERABLE SCROLL ANIMATION ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            var windowHeight = window.innerHeight;
+            var elementVisible = 100; // Trigger point
 
-  <!-- Social Links -->
-  <div class="follow-section">
-    <h2 style="color:var(--primary);">Follow Me</h2>
-    <div class="social-links">
-      <a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a>
-      <a href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://x.com/home" target="_blank"><i class="fab fa-twitter"></i></a>
-    </div>
-  </div>
+            for (var i = 0; i < reveals.length; i++) {
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementBottom = reveals[i].getBoundingClientRect().bottom;
 
-  <script>
-    const toggleBtn = document.getElementById('themeToggle');
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light-theme');
-    });
-  </script>
+                // Check if element is in view
+                if (elementTop < windowHeight - elementVisible && elementBottom > 0) {
+                    reveals[i].classList.add("active");
+                } else {
+                    // Remove class when out of view so it animates again next time
+                    reveals[i].classList.remove("active");
+                }
+            }
+        }
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        window.addEventListener("scroll", reveal);
+        reveal(); // Trigger on load
+
+        // --- 2. Cursor ---
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        
+        window.addEventListener('mousemove', function(e) {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        const interactiveElements = document.querySelectorAll('a, button, .card-custom, .about_me_card');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- 3. Theme Toggle ---
+        const themeBtn = document.getElementById('themeToggle');
+        const icon = themeBtn.querySelector('i');
+        const body = document.body;
+        
+        if(localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            if(body.classList.contains('dark-theme')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+            init(); 
+        });
+
+        // --- 4. Particles ---
+        const canvas = document.getElementById("canvas-bg");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+        let mouse = { x: null, y: null, radius: (canvas.height/80) * (canvas.width/80) }
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color; ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < mouse.radius + this.size){
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 3;
+                    if (mouse.x > this.x && this.x > this.size * 10) this.x -= 3;
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 3;
+                    if (mouse.y > this.y && this.y > this.size * 10) this.y -= 3;
+                }
+                this.x += this.directionX; this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            let color = getComputedStyle(document.body).getPropertyValue('--particle-color').trim();
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 3) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 2) - 1;
+                let directionY = (Math.random() * 2) - 1;
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                    + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        let isDark = document.body.classList.contains('dark-theme');
+                        let r = isDark ? 148 : 109;
+                        let g = isDark ? 163 : 40;
+                        let b_val = isDark ? 184 : 217;
+                        ctx.strokeStyle = `rgba(${r}, ${g}, ${b_val}, ${opacityValue * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0,0,innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth; canvas.height = innerHeight; init();
+        });
+        init(); animate();
+
+        // --- 5. Typewriter Effect ---
+        const typewriterTextElement = document.getElementById('typewriter-text');
+        const words = ["> sudo make_it_happen", "import success", "console.log(Hello World)", "404: Limits Not Found"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100; // Base typing speed
+
+        function typeWriter() {
+            const currentWord = words[wordIndex];
+
+            if (isDeleting) {
+                // Erasing
+                typewriterTextElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50; // Erase faster
+            } else {
+                // Typing
+                typewriterTextElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 150;
+            }
+
+            // If word is fully typed
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Pause at end of word
+            }
+            // If word is fully erased
+            else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length; // Move to next word
+                typeSpeed = 500; // Pause before typing next word
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // Start the typing effect
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add a small delay to start after entrance animations
+            setTimeout(typeWriter, 1000);
+        });
+    </script>
 </body>
 </html>
