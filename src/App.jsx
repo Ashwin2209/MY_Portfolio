@@ -45,7 +45,7 @@ function App() {
         }
       });
     }, { threshold: 0.1 });
-    
+
     reveals.forEach(el => observer.observe(el));
     return () => reveals.forEach(el => observer.unobserve(el));
   }, []);
@@ -104,7 +104,7 @@ function App() {
   useEffect(() => {
     const words = ["Crafting experiences.", "> sudo make_it_happen", "import success", "404: Limits Not Found", "Building the future."];
     let timeoutId;
-    
+
     const typeWriter = () => {
       const { wordIndex, charIndex, isDeleting } = typeIndexRef.current;
       const currentWord = words[wordIndex];
@@ -155,18 +155,18 @@ function App() {
     class Particle {
       constructor(x, y, dx, dy, size, color, isHollow) {
         this.x = x; this.y = y; this.dx = dx; this.dy = dy;
-        this.size = size; 
+        this.size = size;
         this.color = color;
         this.isHollow = isHollow;
         this.baseX = x; this.baseY = y;
         this.opacity = 0.15; // Extremely dim by default so content pops
       }
-      
+
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
         ctx.globalAlpha = this.opacity;
-        
+
         if (this.isHollow) {
           ctx.strokeStyle = this.color;
           ctx.lineWidth = 1.5;
@@ -180,32 +180,32 @@ function App() {
         }
         ctx.globalAlpha = 1.0;
       }
-      
+
       update() {
         if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
         if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
-        
-        let dxMouse = mouseRef.current.x - this.x; 
+
+        let dxMouse = mouseRef.current.x - this.x;
         let dyMouse = mouseRef.current.y - this.y;
         let distance = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
         let interactiveRadius = 200; // Large reaction field
-        
+
         if (distance < interactiveRadius) {
           // React strongly to mouse: become bright and disperse
           this.opacity = 1.0 - (distance / interactiveRadius) * 0.5; // Brighten up significantly
-          
+
           let forceDirectionX = dxMouse / distance;
           let forceDirectionY = dyMouse / distance;
           let force = (interactiveRadius - distance) / interactiveRadius;
           let directionX = forceDirectionX * force * 12; // Explosive push
           let directionY = forceDirectionY * force * 12;
-          
+
           this.x -= directionX;
           this.y -= directionY;
         } else {
           // Fade back down and drift back home
           if (this.opacity > 0.15) this.opacity -= 0.02;
-          
+
           if (this.x !== this.baseX) {
             let dxBase = this.x - this.baseX;
             this.x -= dxBase / 30; // Snap back smoothly
@@ -215,14 +215,14 @@ function App() {
             this.y -= dyBase / 30;
           }
         }
-        
+
         this.x += this.dx;
         this.y += this.dy;
-        
+
         // Base coordinate drifts slowly like floating data
         this.baseX += this.dx * 0.4;
         this.baseY += this.dy * 0.4;
-        
+
         this.draw();
       }
     }
@@ -230,10 +230,10 @@ function App() {
     const initParticles = () => {
       particlesArray = [];
       const numberOfParticles = (canvas.height * canvas.width) / 12000; // Clean, sparse layout
-      
+
       const root = document.documentElement;
       const color = getComputedStyle(root).getPropertyValue('--primary').trim() || '#00f0ff';
-      
+
       for (let i = 0; i < numberOfParticles; i++) {
         let size = (Math.random() * 3) + 1.5; // Slightly larger elements to stand out alone
         let x = Math.random() * innerWidth;
@@ -241,7 +241,7 @@ function App() {
         let dx = (Math.random() * 1) - 0.5;
         let dy = (Math.random() * 1) - 0.5;
         let isHollow = Math.random() > 0.6; // 40% are hollow rings
-        
+
         particlesArray.push(new Particle(x, y, dx, dy, size, color, isHollow));
       }
     };
@@ -370,7 +370,7 @@ function App() {
             <div className="divider mx-auto"></div>
           </div>
           <div className="row g-4 justify-content-center">
-            
+
             <div className="col-6 col-md-4 col-lg-3 reveal reveal-left">
               <div className="card-custom text-center py-4">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" className="skill-logo" />
@@ -449,7 +449,7 @@ function App() {
                 <a href="https://github.com/Ashwin2209/Food-menu" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
               </div>
             </div>
-            
+
             <div className="col-lg-4 col-md-6 reveal reveal-zoom">
               <div className="card-custom d-flex flex-column">
                 <h4 className="mb-3">FixMyCity</h4>
@@ -458,7 +458,7 @@ function App() {
                   <span className="tech-tag">Python</span>
                   <span className="tech-tag">Automation</span>
                 </div>
-                <a href="https://github.com/Ashwin2209/SAmple" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <a href="https://github.com/Ashwin2209/FixMyCity" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
               </div>
             </div>
 
@@ -487,7 +487,7 @@ function App() {
                 <a href="mailto:aahwinramalakshmi@gmail.com" className="btn btn-primary-custom btn-lg mb-4">
                   <i className="fas fa-envelope me-2"></i> Get In Touch
                 </a>
-                
+
                 <div className="d-flex justify-content-center gap-3 mt-4">
                   <a href="https://github.com/" target="_blank" rel="noreferrer" className="social-link"><i className="fab fa-github"></i></a>
                   <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="social-link"><i className="fab fa-linkedin"></i></a>
