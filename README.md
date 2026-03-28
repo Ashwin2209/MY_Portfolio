@@ -4,7 +4,7 @@ Welcome to my personal portfolio! This is a modern, interactive web application 
 
 ## 🚀 Features
 
-- **Modern UI/UX**: A sleek dark theme with a vibrant cyan "Madara's Dominance" color palette.
+- **Modern UI/UX**: A sleek dark theme with a vibrant color palette.
 - **Interactive Holographic Background**: A custom-built, responsive particle canvas background that reacts dynamically to mouse interactions.
 - **Terminal Typewriter Effect**: A tech-inspired auto-typing hero section (`> sudo make_it_happen`).
 - **Responsive Design**: Fully mobile-friendly and optimized for different screen sizes.
