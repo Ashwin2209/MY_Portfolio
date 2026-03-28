@@ -138,7 +138,7 @@ function App() {
     };
   }, []);
 
-  // Neon Network Canvas Logic
+  // Tech Particles Canvas Logic (Holographic Nodes)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -153,20 +153,34 @@ function App() {
     };
 
     class Particle {
-      constructor(x, y, dx, dy, size, color) {
+      constructor(x, y, dx, dy, size, color, isHollow) {
         this.x = x; this.y = y; this.dx = dx; this.dy = dy;
-        this.size = size; this.color = color;
+        this.size = size; 
+        this.color = color;
+        this.isHollow = isHollow;
         this.baseX = x; this.baseY = y;
+        this.opacity = 0.15; // Extremely dim by default so content pops
       }
+      
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = this.color;
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = this.color;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        ctx.globalAlpha = this.opacity;
+        
+        if (this.isHollow) {
+          ctx.strokeStyle = this.color;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = this.opacity > 0.5 ? 15 : 0; // Only glow when bright
+          ctx.shadowColor = this.color;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+        ctx.globalAlpha = 1.0;
       }
+      
       update() {
         if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
         if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
@@ -174,64 +188,61 @@ function App() {
         let dxMouse = mouseRef.current.x - this.x; 
         let dyMouse = mouseRef.current.y - this.y;
         let distance = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        let interactiveRadius = 200; // Large reaction field
         
-        if (distance < mouseRef.current.radius) {
+        if (distance < interactiveRadius) {
+          // React strongly to mouse: become bright and disperse
+          this.opacity = 1.0 - (distance / interactiveRadius) * 0.5; // Brighten up significantly
+          
           let forceDirectionX = dxMouse / distance;
           let forceDirectionY = dyMouse / distance;
-          let force = (mouseRef.current.radius - distance) / mouseRef.current.radius;
-          let directionX = forceDirectionX * force * 5;
-          let directionY = forceDirectionY * force * 5;
+          let force = (interactiveRadius - distance) / interactiveRadius;
+          let directionX = forceDirectionX * force * 12; // Explosive push
+          let directionY = forceDirectionY * force * 12;
+          
           this.x -= directionX;
           this.y -= directionY;
         } else {
-          if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 20;
-          if (this.y !== this.baseY) this.y -= (this.y - this.baseY) / 20;
+          // Fade back down and drift back home
+          if (this.opacity > 0.15) this.opacity -= 0.02;
+          
+          if (this.x !== this.baseX) {
+            let dxBase = this.x - this.baseX;
+            this.x -= dxBase / 30; // Snap back smoothly
+          }
+          if (this.y !== this.baseY) {
+            let dyBase = this.y - this.baseY;
+            this.y -= dyBase / 30;
+          }
         }
         
         this.x += this.dx;
         this.y += this.dy;
-        this.baseX += this.dx;
-        this.baseY += this.dy;
+        
+        // Base coordinate drifts slowly like floating data
+        this.baseX += this.dx * 0.4;
+        this.baseY += this.dy * 0.4;
+        
         this.draw();
       }
     }
 
     const initParticles = () => {
       particlesArray = [];
-      const numberOfParticles = (canvas.height * canvas.width) / 12000;
-      const color = isDarkTheme ? '#00f0ff' : '#4f46e5';
+      const numberOfParticles = (canvas.height * canvas.width) / 12000; // Clean, sparse layout
+      
+      const root = document.documentElement;
+      const color = getComputedStyle(root).getPropertyValue('--primary').trim() || '#00f0ff';
       
       for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 2) + 1;
+        let size = (Math.random() * 3) + 1.5; // Slightly larger elements to stand out alone
         let x = Math.random() * innerWidth;
         let y = Math.random() * innerHeight;
         let dx = (Math.random() * 1) - 0.5;
         let dy = (Math.random() * 1) - 0.5;
-        particlesArray.push(new Particle(x, y, dx, dy, size, color));
-      }
-    };
-
-    const connectParticles = () => {
-      let opacityValue = 1;
-      let r = isDarkTheme ? 0 : 79;
-      let g = isDarkTheme ? 240 : 70;
-      let b_val = isDarkTheme ? 255 : 229;
-
-      for (let a = 0; a < particlesArray.length; a++) {
-        for (let b = a; b < particlesArray.length; b++) {
-          let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
-                         ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-          
-          if (distance < (canvas.width/10) * (canvas.height/10)) {
-            opacityValue = 1 - (distance/15000);
-            ctx.strokeStyle = `rgba(${r}, ${g}, ${b_val}, ${opacityValue * 0.4})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-            ctx.stroke();
-          }
-        }
+        let isHollow = Math.random() > 0.6; // 40% are hollow rings
+        
+        particlesArray.push(new Particle(x, y, dx, dy, size, color, isHollow));
       }
     };
 
@@ -240,7 +251,6 @@ function App() {
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
       }
-      connectParticles();
       animationFrameId = requestAnimationFrame(animateCanvas);
     };
 
@@ -253,6 +263,16 @@ function App() {
       cancelAnimationFrame(animationFrameId);
     };
   }, [isDarkTheme]);
+
+  const handleDownloadCV = (e) => {
+    e.preventDefault();
+    const link = document.createElement('a');
+    link.href = '/resume.jpg';
+    link.download = 'Ashwinkumar_CV.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -298,7 +318,7 @@ function App() {
               </p>
               <div className="d-flex gap-3 justify-content-center justify-content-lg-start animate-hero delay-400">
                 <a href="#projects" className="btn btn-primary-custom">View Projects</a>
-                <a href="/resume.jpg" className="btn btn-outline-custom" download><i className="fas fa-download me-2"></i>CV</a>
+                <a href="/resume.jpg" className="btn btn-outline-custom" onClick={handleDownloadCV}><i className="fas fa-download me-2"></i>CV</a>
               </div>
             </div>
             <div className="col-lg-6 text-center animate-hero delay-200">
