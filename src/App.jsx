@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const [isSiteLoading, setIsSiteLoading] = useState(true);
+  const [redirectingUrl, setRedirectingUrl] = useState(null);
   const [typewriterText, setTypewriterText] = useState("");
   const cursorDotRef = useRef(null);
   const cursorOutlineRef = useRef(null);
@@ -9,31 +11,26 @@ function App() {
   const typeIndexRef = useRef({ wordIndex: 0, charIndex: 0, isDeleting: false });
   const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2, radius: 150 });
 
-  // Theme logic
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      setIsDarkTheme(false);
-      document.body.classList.remove('dark-theme');
-    } else {
-      setIsDarkTheme(true);
-      document.body.classList.add('dark-theme');
-    }
+    const timer = setTimeout(() => {
+      setIsSiteLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
-  const toggleTheme = () => {
-    setIsDarkTheme(prev => {
-      const newTheme = !prev;
-      if (newTheme) {
-        document.body.classList.add('dark-theme');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.classList.remove('dark-theme');
-        localStorage.setItem('theme', 'light');
-      }
-      return newTheme;
-    });
+  const handleProjectClick = (e, url) => {
+    e.preventDefault();
+    setRedirectingUrl(url);
+    setTimeout(() => {
+      window.open(url, "_blank");
+      setRedirectingUrl(null);
+    }, 2000);
   };
+
+  // Always use Dark Theme
+  useEffect(() => {
+    document.body.classList.add('dark-theme');
+  }, []);
 
   // Scroll Reveal Logic
   useEffect(() => {
@@ -42,9 +39,11 @@ function App() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add("active");
+        } else {
+          entry.target.classList.remove("active");
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.15 });
 
     reveals.forEach(el => observer.observe(el));
     return () => reveals.forEach(el => observer.unobserve(el));
@@ -90,6 +89,17 @@ function App() {
       el.addEventListener('mouseleave', removeHover);
     });
 
+    const parallaxElements = document.querySelectorAll('.parallax-element');
+    const onParallaxMove = (e) => {
+      parallaxElements.forEach((el) => {
+        const speed = el.getAttribute('data-parallax') || 0.05;
+        const x = (window.innerWidth - e.pageX * speed) / 100;
+        const y = (window.innerHeight - e.pageY * speed) / 100;
+        el.style.transform = `translateX(${x}px) translateY(${y}px)`;
+      });
+    };
+    window.addEventListener('mousemove', onParallaxMove);
+
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       cancelAnimationFrame(animationFrameId);
@@ -97,6 +107,7 @@ function App() {
         el.removeEventListener('mouseenter', addHover);
         el.removeEventListener('mouseleave', removeHover);
       });
+      window.removeEventListener('mousemove', onParallaxMove);
     };
   }, []);
 
@@ -276,6 +287,13 @@ function App() {
 
   return (
     <>
+      <div className={`loader-overlay ${!isSiteLoading && !redirectingUrl ? 'hidden' : ''}`}>
+        <div className="custom-loader"></div>
+        <h2 className="loader-text mt-4">
+          {isSiteLoading ? "Initializing Portfolio..." : "Opening Project Data..."}
+        </h2>
+      </div>
+
       <div className="cursor-dot" ref={cursorDotRef} data-cursor-dot></div>
       <div className="cursor-outline" ref={cursorOutlineRef} data-cursor-outline></div>
 
@@ -285,9 +303,6 @@ function App() {
         <div className="container">
           <a className="navbar-brand" href="#">Ashwinkumar.</a>
           <div className="d-flex align-items-center order-lg-3 ms-lg-3">
-            <button className="theme-btn" id="themeToggle" onClick={toggleTheme}>
-              <i className={`fas ${isDarkTheme ? 'fa-sun' : 'fa-moon'}`}></i>
-            </button>
             <button className="navbar-toggler ms-2 shadow-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
               <i className="fas fa-bars" style={{ color: 'var(--text-main)' }}></i>
             </button>
@@ -303,10 +318,10 @@ function App() {
         </div>
       </nav>
 
-      <section className="hero-section">
+      <section className="hero-section parallax-container">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6">
+            <div className="col-lg-6 parallax-element" data-parallax="5">
               <h1 className="display-4 fw-bold mb-3 mt-2 animate-hero delay-100">
                 I'm Ashwinkumar <span className="wave-emoji">👋</span>
               </h1>
@@ -321,7 +336,7 @@ function App() {
                 <a href="/resume.jpg" className="btn btn-outline-custom" onClick={handleDownloadCV}><i className="fas fa-download me-2"></i>CV</a>
               </div>
             </div>
-            <div className="col-lg-6 text-center animate-hero delay-200">
+            <div className="col-lg-6 text-center animate-hero delay-200 parallax-element" data-parallax="-4">
               <img src="/image.jpg" alt="Profile" className="profile-img" />
             </div>
           </div>
@@ -446,7 +461,7 @@ function App() {
                   <span className="tech-tag">JavaScript</span>
                   <span className="tech-tag">HTML/CSS</span>
                 </div>
-                <a href="https://github.com/Ashwin2209/Food-menu" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/Food-menu")} style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
               </div>
             </div>
 
@@ -458,7 +473,7 @@ function App() {
                   <span className="tech-tag">Python</span>
                   <span className="tech-tag">Automation</span>
                 </div>
-                <a href="https://github.com/Ashwin2209/FixMyCity" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/FixMyCity")} style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
               </div>
             </div>
 
@@ -470,7 +485,7 @@ function App() {
                   <span className="tech-tag">React.js</span>
                   <span className="tech-tag">Vite</span>
                 </div>
-                <a href="https://github.com/Ashwin2209/MY_Portfolio" target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/MY_Portfolio")} style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
               </div>
             </div>
           </div>
