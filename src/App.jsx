@@ -503,6 +503,7 @@ function App() {
                   <img src="/thumb-resume.jpg" alt="ResumeForge preview" className="project-thumb" />
                   <div className="project-thumb-overlay">
                     <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/resume2ak")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/Resume")} className="thumb-btn thumb-btn-sec">Code <i className="fas fa-arrow-right ms-1"></i></a>
                   </div>
                 </div>
                 <div className="project-card-body">
@@ -523,6 +524,7 @@ function App() {
                   <img src="/thumb-funcbox.jpg" alt="FuncBox documentation preview" className="project-thumb" />
                   <div className="project-thumb-overlay">
                     <a href="#" onClick={(e) => handleProjectClick(e, "https://funcbox-web.vercel.app")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/funcBox-i3/funcBox-web")} className="thumb-btn thumb-btn-sec">Code <i className="fas fa-arrow-right ms-1"></i></a>
                   </div>
                 </div>
                 <div className="project-card-body">
