@@ -454,79 +454,107 @@ function App() {
           </div>
           <div className="row g-4">
 
+            {/* Foodie Spot */}
             <div className="col-lg-4 col-md-6 reveal reveal-left">
-              <div className="card-custom d-flex flex-column">
-                <h4 className="mb-3">Foodie Spot</h4>
-                <p className="text-muted flex-grow-1">A responsive digital menu application allowing users to browse and filter restaurant items by category with a waiter & kitchen portal.</p>
-                <div className="mb-3">
-                  <span className="tech-tag">React.js</span>
-                  <span className="tech-tag">JavaScript</span>
-                  <span className="tech-tag">CSS</span>
+              <div className="project-card">
+                <div className="project-thumb-wrap">
+                  <img src="/thumb-foodie.jpg" alt="Foodie Spot preview" className="project-thumb" />
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://foodiespot-menu.vercel.app")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/Food-menu")} className="thumb-btn thumb-btn-sec">Code <i className="fas fa-arrow-right ms-1"></i></a>
+                  </div>
                 </div>
-                <div className="d-flex gap-3 mt-auto">
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://foodiespot-menu.vercel.app")} style={{ color: 'var(--primary)', fontWeight: 600 }}>Live Demo <i className="fas fa-external-link-alt small ms-1"></i></a>
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/Food-menu")} style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <div className="project-card-body">
+                  <h4>Foodie Spot</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">React.js</span>
+                    <span className="tech-tag">JavaScript</span>
+                    <span className="tech-tag">CSS</span>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* FixMyCity — no thumbnail */}
             <div className="col-lg-4 col-md-6 reveal reveal-zoom">
-              <div className="card-custom d-flex flex-column">
-                <h4 className="mb-3">FixMyCity</h4>
-                <p className="text-muted flex-grow-1">Automated grievance system that generates formal letters from user input and handles email dispatching.</p>
-                <div className="mb-3">
-                  <span className="tech-tag">Python</span>
-                  <span className="tech-tag">Automation</span>
+              <div className="project-card">
+                <div className="project-thumb-wrap project-no-thumb">
+                  <div className="project-no-thumb-inner">
+                    <i className="fas fa-city project-no-thumb-icon"></i>
+                    <p>Automated grievance system that generates formal letters and handles email dispatching.</p>
+                  </div>
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/FixMyCity")} className="thumb-btn">View Code <i className="fas fa-arrow-right ms-1"></i></a>
+                  </div>
                 </div>
-                <div className="d-flex gap-3 mt-auto">
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/FixMyCity")} style={{ color: 'var(--primary)', fontWeight: 600 }}>View Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <div className="project-card-body">
+                  <h4>FixMyCity</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">Python</span>
+                    <span className="tech-tag">Automation</span>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* ResumeForge */}
             <div className="col-lg-4 col-md-6 reveal reveal-right">
-              <div className="card-custom d-flex flex-column">
-                <h4 className="mb-3">ResumeForge</h4>
-                <p className="text-muted flex-grow-1">AI-powered resume builder with ATS scoring, real-time PDF preview, and role-specific optimization for job seekers.</p>
-                <div className="mb-3">
-                  <span className="tech-tag">React.js</span>
-                  <span className="tech-tag">AI/ATS</span>
-                  <span className="tech-tag">Vite</span>
+              <div className="project-card">
+                <div className="project-thumb-wrap">
+                  <img src="/thumb-resume.jpg" alt="ResumeForge preview" className="project-thumb" />
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/resume2ak")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                  </div>
                 </div>
-                <div className="d-flex gap-3 mt-auto">
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/resume2ak")} style={{ color: 'var(--primary)', fontWeight: 600 }}>Live Demo <i className="fas fa-external-link-alt small ms-1"></i></a>
+                <div className="project-card-body">
+                  <h4>ResumeForge</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">React.js</span>
+                    <span className="tech-tag">AI/ATS</span>
+                    <span className="tech-tag">Vite</span>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* My World */}
             <div className="col-lg-4 col-md-6 reveal reveal-left">
-              <div className="card-custom d-flex flex-column">
-                <h4 className="mb-3">My World</h4>
-                <p className="text-muted flex-grow-1">This professional portfolio website featuring dark mode, interactive canvas background, smooth animations, and a sleek React UI.</p>
-                <div className="mb-3">
-                  <span className="tech-tag">React.js</span>
-                  <span className="tech-tag">Vite</span>
-                  <span className="tech-tag">Canvas</span>
+              <div className="project-card">
+                <div className="project-thumb-wrap">
+                  <img src="/thumb-portfolio.jpg" alt="My World portfolio preview" className="project-thumb" />
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/my-w0rld")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/MY_Portfolio")} className="thumb-btn thumb-btn-sec">Code <i className="fas fa-arrow-right ms-1"></i></a>
+                  </div>
                 </div>
-                <div className="d-flex gap-3 mt-auto">
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/my-w0rld")} style={{ color: 'var(--primary)', fontWeight: 600 }}>Live Demo <i className="fas fa-external-link-alt small ms-1"></i></a>
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/MY_Portfolio")} style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Code <i className="fas fa-arrow-right small ms-1"></i></a>
+                <div className="project-card-body">
+                  <h4>My World</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">React.js</span>
+                    <span className="tech-tag">Vite</span>
+                    <span className="tech-tag">Canvas</span>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* FuncBox */}
             <div className="col-lg-4 col-md-6 reveal reveal-zoom">
-              <div className="card-custom d-flex flex-column">
-                <h4 className="mb-3">FuncBox</h4>
-                <p className="text-muted flex-grow-1">A comprehensive documentation platform for the funcBox utility library — supporting Python & Java with search, interactive API references, and a claymorphic design.</p>
-                <div className="mb-3">
-                  <span className="tech-tag">React.js</span>
-                  <span className="tech-tag">Vite</span>
-                  <span className="tech-tag">Python</span>
-                  <span className="tech-tag">Java</span>
+              <div className="project-card">
+                <div className="project-thumb-wrap">
+                  <img src="/thumb-funcbox.jpg" alt="FuncBox documentation preview" className="project-thumb" />
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://funcbox-web.vercel.app")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                  </div>
                 </div>
-                <div className="d-flex gap-3 mt-auto">
-                  <a href="#" onClick={(e) => handleProjectClick(e, "https://funcbox-web.vercel.app")} style={{ color: 'var(--primary)', fontWeight: 600 }}>Live Demo <i className="fas fa-external-link-alt small ms-1"></i></a>
+                <div className="project-card-body">
+                  <h4>FuncBox</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">React.js</span>
+                    <span className="tech-tag">Vite</span>
+                    <span className="tech-tag">Python</span>
+                    <span className="tech-tag">Java</span>
+                  </div>
                 </div>
               </div>
             </div>
