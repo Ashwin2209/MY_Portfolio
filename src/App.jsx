@@ -454,8 +454,29 @@ function App() {
           </div>
           <div className="row g-4">
 
-            {/* Foodie Spot */}
+            {/* My World */}
             <div className="col-lg-4 col-md-6 reveal reveal-left">
+              <div className="project-card">
+                <div className="project-thumb-wrap">
+                  <img src="/thumb-portfolio.jpg" alt="My World portfolio preview" className="project-thumb" />
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/my-w0rld")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/MY_Portfolio")} className="thumb-btn thumb-btn-sec">Code <i className="fas fa-arrow-right ms-1"></i></a>
+                  </div>
+                </div>
+                <div className="project-card-body">
+                  <h4>My World</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">React.js</span>
+                    <span className="tech-tag">Vite</span>
+                    <span className="tech-tag">Canvas</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Foodie Spot */}
+            <div className="col-lg-4 col-md-6 reveal reveal-zoom">
               <div className="project-card">
                 <div className="project-thumb-wrap">
                   <img src="/thumb-foodie.jpg" alt="Foodie Spot preview" className="project-thumb" />
@@ -470,28 +491,6 @@ function App() {
                     <span className="tech-tag">React.js</span>
                     <span className="tech-tag">JavaScript</span>
                     <span className="tech-tag">CSS</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* FixMyCity — no thumbnail */}
-            <div className="col-lg-4 col-md-6 reveal reveal-zoom">
-              <div className="project-card">
-                <div className="project-thumb-wrap project-no-thumb">
-                  <div className="project-no-thumb-inner">
-                    <i className="fas fa-city project-no-thumb-icon"></i>
-                    <p>Automated grievance system that generates formal letters and handles email dispatching.</p>
-                  </div>
-                  <div className="project-thumb-overlay">
-                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/FixMyCity")} className="thumb-btn">View Code <i className="fas fa-arrow-right ms-1"></i></a>
-                  </div>
-                </div>
-                <div className="project-card-body">
-                  <h4>FixMyCity</h4>
-                  <div className="project-tags">
-                    <span className="tech-tag">Python</span>
-                    <span className="tech-tag">Automation</span>
                   </div>
                 </div>
               </div>
@@ -517,29 +516,8 @@ function App() {
               </div>
             </div>
 
-            {/* My World */}
-            <div className="col-lg-4 col-md-6 reveal reveal-left">
-              <div className="project-card">
-                <div className="project-thumb-wrap">
-                  <img src="/thumb-portfolio.jpg" alt="My World portfolio preview" className="project-thumb" />
-                  <div className="project-thumb-overlay">
-                    <a href="#" onClick={(e) => handleProjectClick(e, "https://tinyurl.com/my-w0rld")} className="thumb-btn">Live Demo <i className="fas fa-external-link-alt ms-1"></i></a>
-                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/MY_Portfolio")} className="thumb-btn thumb-btn-sec">Code <i className="fas fa-arrow-right ms-1"></i></a>
-                  </div>
-                </div>
-                <div className="project-card-body">
-                  <h4>My World</h4>
-                  <div className="project-tags">
-                    <span className="tech-tag">React.js</span>
-                    <span className="tech-tag">Vite</span>
-                    <span className="tech-tag">Canvas</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* FuncBox */}
-            <div className="col-lg-4 col-md-6 reveal reveal-zoom">
+            <div className="col-lg-4 col-md-6 reveal reveal-left">
               <div className="project-card">
                 <div className="project-thumb-wrap">
                   <img src="/thumb-funcbox.jpg" alt="FuncBox documentation preview" className="project-thumb" />
@@ -554,6 +532,28 @@ function App() {
                     <span className="tech-tag">Vite</span>
                     <span className="tech-tag">Python</span>
                     <span className="tech-tag">Java</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* FixMyCity — no thumbnail */}
+            <div className="col-lg-4 col-md-6 reveal reveal-zoom">
+              <div className="project-card">
+                <div className="project-thumb-wrap project-no-thumb">
+                  <div className="project-no-thumb-inner">
+                    <i className="fas fa-city project-no-thumb-icon"></i>
+                    <p>Automated grievance system that generates formal letters and handles email dispatching.</p>
+                  </div>
+                  <div className="project-thumb-overlay">
+                    <a href="#" onClick={(e) => handleProjectClick(e, "https://github.com/Ashwin2209/FixMyCity")} className="thumb-btn">View Code <i className="fas fa-arrow-right ms-1"></i></a>
+                  </div>
+                </div>
+                <div className="project-card-body">
+                  <h4>FixMyCity</h4>
+                  <div className="project-tags">
+                    <span className="tech-tag">Python</span>
+                    <span className="tech-tag">Automation</span>
                   </div>
                 </div>
               </div>
