@@ -30,21 +30,7 @@ function App() {
   });
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingStatus, setLoadingStatus] = useState("Initializing systems...");
-  const [scrollProgress, setScrollProgress] = useState(0);
   const cursorDotRef = useRef(null);
-
-  // --- Scroll Progress Tracker ---
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        const progress = (window.scrollY / totalHeight) * 100;
-        setScrollProgress(progress);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // --- GitHub Data Fetching ---
   useEffect(() => {
@@ -565,8 +551,6 @@ function App() {
 
   return (
     <>
-      {/* ===== TOP SCROLL PROGRESS BAR ===== */}
-      <div className="top-scroll-bar" style={{ width: `${scrollProgress}%` }}></div>
       {/* ===== LOADER ===== */}
       <div className={`loader-overlay ${!isSiteLoading && !redirectingUrl ? 'hidden' : ''}`}>
         {redirectingUrl ? (
