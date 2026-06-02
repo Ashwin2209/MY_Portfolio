@@ -1,23 +1,166 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const getLanguageColor = (lang) => {
+  const colors = {
+    JavaScript: "#f1e05a",
+    HTML: "#e34c26",
+    CSS: "#563d7c",
+    Python: "#3572A5",
+    Java: "#b07219",
+    Vue: "#41b883",
+    TypeScript: "#3178c6"
+  };
+  return colors[lang] || "#8b949e";
+};
+
 function App() {
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isSiteLoading, setIsSiteLoading] = useState(true);
   const [redirectingUrl, setRedirectingUrl] = useState(null);
   const [typewriterText, setTypewriterText] = useState("");
+  const [activeCert, setActiveCert] = useState(null);
+  const [statsAnimated, setStatsAnimated] = useState(false);
+  const [counters, setCounters] = useState({ projects: 0, technologies: 0, contributions: 0, experience: 0 });
+  const [gitStats, setGitStats] = useState({
+    projects: 5,
+    contributions: 67,
+    followers: 2,
+    stars: 0,
+    reposList: [],
+    isLoading: true
+  });
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingStatus, setLoadingStatus] = useState("Initializing systems...");
+  const [scrollProgress, setScrollProgress] = useState(0);
   const cursorDotRef = useRef(null);
+
+  // --- Scroll Progress Tracker ---
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(progress);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // --- GitHub Data Fetching ---
+  useEffect(() => {
+    const fetchGitData = async () => {
+      try {
+        setLoadingStatus("Connecting to GitHub Core API...");
+        const profilePromise = fetch("https://api.github.com/users/Ashwin2209");
+        
+        setLoadingStatus("Retrieving repository catalog...");
+        const reposPromise = fetch("https://api.github.com/users/Ashwin2209/repos");
+        
+        setLoadingStatus("Parsing contribution history...");
+        const contribPromise = fetch("https://github-contributions-api.jogruber.de/v4/Ashwin2209");
+
+        const [profileRes, reposRes, contribRes] = await Promise.all([
+          profilePromise.catch(() => null),
+          reposPromise.catch(() => null),
+          contribPromise.catch(() => null)
+        ]);
+
+        let profileData = {};
+        if (profileRes && profileRes.ok) {
+          profileData = await profileRes.json();
+        }
+
+        let reposData = [];
+        if (reposRes && reposRes.ok) {
+          reposData = await reposRes.json();
+        }
+
+        let contribData = {};
+        if (contribRes && contribRes.ok) {
+          contribData = await contribRes.json();
+        }
+
+        let totalContribs = 67; // fallback
+        if (contribData && contribData.total) {
+          totalContribs = Object.values(contribData.total).reduce((a, b) => a + b, 0);
+        }
+
+        let totalStars = 0;
+        let formattedRepos = [];
+        if (Array.isArray(reposData)) {
+          totalStars = reposData.reduce((acc, repo) => acc + (repo.stargazers_count || 0), 0);
+          formattedRepos = reposData
+            .filter(repo => !repo.fork)
+            .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+            .slice(0, 6);
+        }
+
+        setGitStats({
+          projects: profileData.public_repos || 5,
+          contributions: totalContribs,
+          followers: profileData.followers || 2,
+          stars: totalStars,
+          reposList: formattedRepos,
+          isLoading: false
+        });
+      } catch (err) {
+        console.error("Error fetching github stats:", err);
+        setGitStats(prev => ({ ...prev, isLoading: false }));
+      } finally {
+        setLoadingStatus("Ready!");
+        setLoadingProgress(100);
+        setTimeout(() => {
+          setIsSiteLoading(false);
+        }, 500);
+      }
+    };
+    fetchGitData();
+  }, []);
   const cursorOutlineRef = useRef(null);
   const canvasRef = useRef(null);
+  const statsRef = useRef(null);
   const typeIndexRef = useRef({ wordIndex: 0, charIndex: 0, isDeleting: false });
   const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2, radius: 150 });
 
+  // --- Loading Screen Hook ---
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsSiteLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!isSiteLoading) return;
+    
+    let currentProgress = 0;
+    const interval = setInterval(() => {
+      if (currentProgress < 90) {
+        currentProgress += Math.floor(Math.random() * 4) + 1;
+        if (currentProgress > 90) currentProgress = 90;
+        setLoadingProgress(currentProgress);
+        
+        if (currentProgress < 25) {
+          setLoadingStatus("Establishing secure handshake...");
+        } else if (currentProgress < 50) {
+          setLoadingStatus("Connecting to GitHub Core API...");
+        } else if (currentProgress < 75) {
+          setLoadingStatus("Retrieving public contributions...");
+        } else {
+          setLoadingStatus("Preparing landing interface...");
+        }
+      }
+    }, 45);
 
+    // Fallback backup timer: 4.5 seconds
+    const backupTimer = setTimeout(() => {
+      setLoadingStatus("Connection timeout - running local version...");
+      setLoadingProgress(100);
+      setTimeout(() => {
+        setIsSiteLoading(false);
+      }, 500);
+    }, 4500);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(backupTimer);
+    };
+  }, [isSiteLoading]);
+
+  // --- Project Click Handler ---
   const handleProjectClick = (e, url) => {
     e.preventDefault();
     setRedirectingUrl(url);
@@ -27,12 +170,12 @@ function App() {
     }, 2000);
   };
 
-  // Always use Dark Theme
+  // --- Always Dark Theme ---
   useEffect(() => {
     document.body.classList.add('dark-theme');
   }, []);
 
-  // Scroll Reveal Logic
+  // --- Scroll Reveal Logic ---
   useEffect(() => {
     const reveals = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver((entries) => {
@@ -47,9 +190,9 @@ function App() {
 
     reveals.forEach(el => observer.observe(el));
     return () => reveals.forEach(el => observer.unobserve(el));
-  }, []);
+  }, [gitStats.isLoading]);
 
-  // Custom Cursor Logic
+  // --- Custom Cursor Logic ---
   useEffect(() => {
     const cursorDot = cursorDotRef.current;
     const cursorOutline = cursorOutlineRef.current;
@@ -81,7 +224,7 @@ function App() {
     window.addEventListener('mousemove', onMouseMove);
     animateCursor();
 
-    const interactiveElements = document.querySelectorAll('a, button, .card-custom, .about_me_card, .social-link');
+    const interactiveElements = document.querySelectorAll('a, button, .card-custom, .about_me_card, .social-link, .achievement-card, .stat-pill');
     const addHover = () => document.body.classList.add('hovering');
     const removeHover = () => document.body.classList.remove('hovering');
     interactiveElements.forEach(el => {
@@ -111,7 +254,7 @@ function App() {
     };
   }, []);
 
-  // Typewriter Logic
+  // --- Typewriter Logic ---
   useEffect(() => {
     const words = ["Crafting experiences.", "> sudo make_it_happen", "import success", "404: Limits Not Found", "Building the future."];
     let timeoutId;
@@ -149,7 +292,7 @@ function App() {
     };
   }, []);
 
-  // Tech Particles Canvas Logic (Holographic Nodes)
+  // --- Canvas Particles (Holographic Nodes) ---
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -170,7 +313,7 @@ function App() {
         this.color = color;
         this.isHollow = isHollow;
         this.baseX = x; this.baseY = y;
-        this.opacity = 0.15; // Extremely dim by default so content pops
+        this.opacity = 0.15;
       }
 
       draw() {
@@ -184,7 +327,7 @@ function App() {
           ctx.stroke();
         } else {
           ctx.fillStyle = this.color;
-          ctx.shadowBlur = this.opacity > 0.5 ? 15 : 0; // Only glow when bright
+          ctx.shadowBlur = this.opacity > 0.5 ? 15 : 0;
           ctx.shadowColor = this.color;
           ctx.fill();
           ctx.shadowBlur = 0;
@@ -199,27 +342,22 @@ function App() {
         let dxMouse = mouseRef.current.x - this.x;
         let dyMouse = mouseRef.current.y - this.y;
         let distance = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-        let interactiveRadius = 200; // Large reaction field
+        let interactiveRadius = 200;
 
         if (distance < interactiveRadius) {
-          // React strongly to mouse: become bright and disperse
-          this.opacity = 1.0 - (distance / interactiveRadius) * 0.5; // Brighten up significantly
-
+          this.opacity = 1.0 - (distance / interactiveRadius) * 0.5;
           let forceDirectionX = dxMouse / distance;
           let forceDirectionY = dyMouse / distance;
           let force = (interactiveRadius - distance) / interactiveRadius;
-          let directionX = forceDirectionX * force * 12; // Explosive push
+          let directionX = forceDirectionX * force * 12;
           let directionY = forceDirectionY * force * 12;
-
           this.x -= directionX;
           this.y -= directionY;
         } else {
-          // Fade back down and drift back home
           if (this.opacity > 0.15) this.opacity -= 0.02;
-
           if (this.x !== this.baseX) {
             let dxBase = this.x - this.baseX;
-            this.x -= dxBase / 30; // Snap back smoothly
+            this.x -= dxBase / 30;
           }
           if (this.y !== this.baseY) {
             let dyBase = this.y - this.baseY;
@@ -229,30 +367,25 @@ function App() {
 
         this.x += this.dx;
         this.y += this.dy;
-
-        // Base coordinate drifts slowly like floating data
         this.baseX += this.dx * 0.4;
         this.baseY += this.dy * 0.4;
-
         this.draw();
       }
     }
 
     const initParticles = () => {
       particlesArray = [];
-      const numberOfParticles = (canvas.height * canvas.width) / 12000; // Clean, sparse layout
-
+      const numberOfParticles = (canvas.height * canvas.width) / 12000;
       const root = document.documentElement;
       const color = getComputedStyle(root).getPropertyValue('--primary').trim() || '#00f0ff';
 
       for (let i = 0; i < numberOfParticles; i++) {
-        let size = (Math.random() * 3) + 1.5; // Slightly larger elements to stand out alone
+        let size = (Math.random() * 3) + 1.5;
         let x = Math.random() * innerWidth;
         let y = Math.random() * innerHeight;
         let dx = (Math.random() * 1) - 0.5;
         let dy = (Math.random() * 1) - 0.5;
-        let isHollow = Math.random() > 0.6; // 40% are hollow rings
-
+        let isHollow = Math.random() > 0.6;
         particlesArray.push(new Particle(x, y, dx, dy, size, color, isHollow));
       }
     };
@@ -273,8 +406,51 @@ function App() {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isDarkTheme]);
+  }, []);
 
+  // --- Stats Counter Animation ---
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !statsAnimated) {
+        setStatsAnimated(true);
+      }
+    }, { threshold: 0.3 });
+
+    if (statsRef.current) observer.observe(statsRef.current);
+    return () => observer.disconnect();
+  }, [statsAnimated]);
+
+  useEffect(() => {
+    if (!statsAnimated) return;
+
+    const targets = { 
+      projects: gitStats.projects, 
+      technologies: 8, 
+      contributions: gitStats.contributions, 
+      experience: 2 
+    };
+    const duration = 2000;
+    const startTime = performance.now();
+    const startValues = { ...counters };
+
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setCounters({
+        projects: Math.floor(startValues.projects + (targets.projects - startValues.projects) * eased),
+        technologies: Math.floor(startValues.technologies + (targets.technologies - startValues.technologies) * eased),
+        contributions: Math.floor(startValues.contributions + (targets.contributions - startValues.contributions) * eased),
+        experience: Math.floor(startValues.experience + (targets.experience - startValues.experience) * eased),
+      });
+
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [statsAnimated, gitStats.projects, gitStats.contributions]);
+
+  // --- CV Download ---
   const handleDownloadCV = (e) => {
     e.preventDefault();
     const link = document.createElement('a');
@@ -285,20 +461,154 @@ function App() {
     document.body.removeChild(link);
   };
 
+  // --- Timeline Data ---
+  const timelineData = [
+    {
+      year: "2022",
+      title: "Started B.Tech in Information Technology",
+      description: "Began pursuing B.Tech IT at Vel Tech Multi Tech Dr. Rangarajan Dr. Sakunthala Engineering College, building foundations in software development, DSA, and web technologies.",
+      icon: "fas fa-graduation-cap",
+      type: "education"
+    },
+    {
+      year: "Sep 2024",
+      title: "Generative AI Mega Workshop 2.0",
+      description: "Attended an exclusive workshop hosted by Mr Tezan Sahu, SDE II at Microsoft, conducted by NxtWave CCBP 4.0 Academy.",
+      icon: "fas fa-robot",
+      type: "achievement"
+    },
+    {
+      year: "Oct 2024",
+      title: "Java Programming Certification",
+      description: "Successfully completed Java Programming course from Great Learning Academy, strengthening OOP and backend fundamentals.",
+      icon: "fas fa-certificate",
+      type: "certification"
+    },
+    {
+      year: "Dec 2024",
+      title: "AI Internship — Top Tech Developers",
+      description: "Completed an internship in the Artificial Intelligence domain at Top Tech Developers, Chennai (Dec 6–24, 2024).",
+      icon: "fas fa-briefcase",
+      type: "experience"
+    },
+    {
+      year: "Mar 2025",
+      title: "GENOVATE'25 — Project Expo",
+      description: "Participated in GENOVATE'25, a department-wide Project Expo organized by the Department of IT at Vel Tech.",
+      icon: "fas fa-project-diagram",
+      type: "achievement"
+    },
+    {
+      year: "Mar 2025",
+      title: "Literary Lens — 1st Prize 🏆",
+      description: "Won 1st prize in the Literary Lens event at Literary Fest, organized by the Chaucerian English Club.",
+      icon: "fas fa-trophy",
+      type: "achievement"
+    },
+    {
+      year: "Present",
+      title: "4th Year — Building the Future",
+      description: "Currently in final year, actively building full-stack projects and seeking full-time opportunities to create impactful digital products.",
+      icon: "fas fa-rocket",
+      type: "current"
+    }
+  ];
+
+  // --- Certificates Data ---
+  const certificatesData = [
+    {
+      id: 1,
+      title: "AI Internship Completion",
+      org: "Top Tech Developers, Chennai",
+      date: "December 2024",
+      description: "Completed internship in Artificial Intelligence domain.",
+      image: "/cert-internship.jpg",
+      icon: "fas fa-briefcase"
+    },
+    {
+      id: 2,
+      title: "GENOVATE'25 — Project Expo",
+      org: "Vel Tech Multi Tech, Dept. of IT",
+      date: "March 2025",
+      description: "Participated in department-wide Project Expo.",
+      image: "/cert-genovate.jpg",
+      icon: "fas fa-project-diagram"
+    },
+    {
+      id: 3,
+      title: "Literary Lens — 1st Prize",
+      org: "Chaucerian English Club",
+      date: "March 2025",
+      description: "Won 1st prize at Literary Fest event.",
+      image: "/cert-literary.jpg",
+      icon: "fas fa-trophy"
+    },
+    {
+      id: 4,
+      title: "Java Programming",
+      org: "Great Learning Academy",
+      date: "October 2024",
+      description: "Completed Java Programming online course.",
+      image: "/cert-java.jpg",
+      icon: "fas fa-code"
+    },
+    {
+      id: 5,
+      title: "Generative AI Workshop 2.0",
+      org: "NxtWave CCBP 4.0 Academy",
+      date: "September 2024",
+      description: "Workshop hosted by Mr Tezan Sahu, SDE II at Microsoft.",
+      image: "/cert-genai.jpg",
+      icon: "fas fa-robot"
+    }
+  ];
+
   return (
     <>
+      {/* ===== TOP SCROLL PROGRESS BAR ===== */}
+      <div className="top-scroll-bar" style={{ width: `${scrollProgress}%` }}></div>
+      {/* ===== LOADER ===== */}
       <div className={`loader-overlay ${!isSiteLoading && !redirectingUrl ? 'hidden' : ''}`}>
-        <div className="custom-loader"></div>
-        <h2 className="loader-text mt-4">
-          {isSiteLoading ? "Initializing Portfolio..." : "Opening Project Data..."}
-        </h2>
+        {redirectingUrl ? (
+          <div className="text-center">
+            <div className="custom-loader"></div>
+            <h2 className="loader-text mt-4">Opening Project Data...</h2>
+          </div>
+        ) : (
+          <div className="loader-progress-wrap text-center">
+            <h1 className="loader-brand mb-3">Ashwinkumar.</h1>
+            <div className="loader-progress-bar-bg mx-auto mb-3">
+              <div className="loader-progress-bar-fill" style={{ width: `${loadingProgress}%` }}></div>
+            </div>
+            <div className="loader-status text-muted mb-2">{loadingStatus}</div>
+            <div className="loader-percent">{loadingProgress}%</div>
+          </div>
+        )}
       </div>
 
+      {/* ===== CERTIFICATE LIGHTBOX ===== */}
+      {activeCert && (
+        <div className="cert-lightbox" onClick={() => setActiveCert(null)}>
+          <div className="cert-lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button className="cert-lightbox-close" onClick={() => setActiveCert(null)}>
+              <i className="fas fa-times"></i>
+            </button>
+            <img src={activeCert.image} alt={activeCert.title} />
+            <div className="cert-lightbox-info">
+              <h3>{activeCert.title}</h3>
+              <p>{activeCert.org} &bull; {activeCert.date}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== CUSTOM CURSOR ===== */}
       <div className="cursor-dot" ref={cursorDotRef} data-cursor-dot></div>
       <div className="cursor-outline" ref={cursorOutlineRef} data-cursor-outline></div>
 
       <canvas id="canvas-bg" ref={canvasRef}></canvas>
 
+      {/* ===== NAVBAR ===== */}
       <nav className="navbar navbar-expand-lg fixed-top navbar-animate">
         <div className="container">
           <a className="navbar-brand" href="#">Ashwinkumar.</a>
@@ -312,12 +622,14 @@ function App() {
               <li className="nav-item"><a className="nav-link mx-2" href="#about">About</a></li>
               <li className="nav-item"><a className="nav-link mx-2" href="#skills">Skills</a></li>
               <li className="nav-item"><a className="nav-link mx-2" href="#projects">Work</a></li>
+              <li className="nav-item"><a className="nav-link mx-2" href="#achievements">Achievements</a></li>
               <li className="nav-item"><a className="nav-link mx-2" href="#contact">Contact</a></li>
             </ul>
           </div>
         </div>
       </nav>
 
+      {/* ===== HERO SECTION ===== */}
       <section className="hero-section parallax-container">
         <div className="container">
           <div className="row align-items-center">
@@ -343,6 +655,7 @@ function App() {
         </div>
       </section>
 
+      {/* ===== ABOUT ME ===== */}
       <section id="about" className="section-padding">
         <div className="container">
           <div className="mb-5 text-center reveal reveal-zoom">
@@ -353,7 +666,7 @@ function App() {
             <div className="col-md-6 reveal reveal-left">
               <div className="about_me_card">
                 <h1>Profession / Studies</h1>
-                <p>I am currently pursuing a B.Tech in Information Technology, building a strong foundation in software development, data structures, algorithms, databases, networking, and modern web technologies.</p>
+                <p>I am currently pursuing a B.Tech in Information Technology at Vel Tech Multi Tech Dr. Rangarajan Dr. Sakunthala Engineering College, building a strong foundation in software development, data structures, algorithms, databases, networking, and modern web technologies.</p>
               </div>
             </div>
             <div className="col-md-6 reveal reveal-top">
@@ -378,6 +691,7 @@ function App() {
         </div>
       </section>
 
+      {/* ===== SKILLS ===== */}
       <section id="skills" className="section-padding">
         <div className="container">
           <div className="mb-5 text-center reveal reveal-zoom">
@@ -409,29 +723,29 @@ function App() {
 
             <div className="col-6 col-md-4 col-lg-3 reveal reveal-right">
               <div className="card-custom text-center py-4">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" className="skill-logo" />
+                <h5 className="mt-2">Java</h5>
+              </div>
+            </div>
+
+            <div className="col-6 col-md-4 col-lg-3 reveal reveal-left">
+              <div className="card-custom text-center py-4">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" alt="Bootstrap" className="skill-logo" />
                 <h5 className="mt-2">Bootstrap</h5>
               </div>
             </div>
 
-            <div className="col-6 col-md-4 col-lg-3 reveal reveal-left">
+            <div className="col-6 col-md-4 col-lg-3 reveal reveal-bottom">
               <div className="card-custom text-center py-4">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" className="skill-logo" />
                 <h5 className="mt-2">GitHub</h5>
               </div>
             </div>
 
-            <div className="col-6 col-md-4 col-lg-3 reveal reveal-bottom">
+            <div className="col-6 col-md-4 col-lg-3 reveal reveal-top">
               <div className="card-custom text-center py-4">
                 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" className="skill-logo" />
                 <h5 className="mt-2">Figma</h5>
-              </div>
-            </div>
-
-            <div className="col-6 col-md-4 col-lg-3 reveal reveal-top">
-              <div className="card-custom text-center py-4">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code" className="skill-logo" />
-                <h5 className="mt-2">VS Code</h5>
               </div>
             </div>
 
@@ -446,6 +760,157 @@ function App() {
         </div>
       </section>
 
+      {/* ===== STATS COUNTER BAR ===== */}
+      <section className="stats-section" ref={statsRef}>
+        <div className="container">
+          <div className="stats-bar">
+            <div className="stat-counter-item">
+              <div className="stat-number-wrap">
+                <span className="stat-number">{counters.projects}</span>
+                <span className="stat-plus">+</span>
+              </div>
+              <span className="stat-label">Projects Completed</span>
+            </div>
+            <div className="stat-counter-item">
+              <div className="stat-number-wrap">
+                <span className="stat-number">{counters.technologies}</span>
+                <span className="stat-plus">+</span>
+              </div>
+              <span className="stat-label">Technologies</span>
+            </div>
+            <div className="stat-counter-item">
+              <div className="stat-number-wrap">
+                <span className="stat-number">{counters.contributions}</span>
+                <span className="stat-plus">+</span>
+              </div>
+              <span className="stat-label">GitHub Contributions</span>
+            </div>
+            <div className="stat-counter-item">
+              <div className="stat-number-wrap">
+                <span className="stat-number">{counters.experience}</span>
+                <span className="stat-plus">+</span>
+              </div>
+              <span className="stat-label">Years Coding</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== GITHUB ANALYTICS ===== */}
+      <section className="github-analytics-section section-padding">
+        <div className="container">
+          <div className="mb-5 text-center reveal reveal-zoom">
+            <h2>GitHub Analytics</h2>
+            <div className="divider mx-auto"></div>
+            <p className="text-muted">Real-time statistics fetched from GitHub API</p>
+          </div>
+
+          <div className="row g-4 mb-5 justify-content-center">
+            <div className="col-6 col-md-3 reveal reveal-left">
+              <div className="git-metric-card text-center">
+                <div className="git-metric-icon"><i className="fas fa-code-branch"></i></div>
+                <h3 className="git-metric-value">{gitStats.isLoading ? <span className="spinner-border spinner-border-sm text-secondary"></span> : gitStats.projects}</h3>
+                <p className="git-metric-label">Repositories</p>
+              </div>
+            </div>
+            
+            <div className="col-6 col-md-3 reveal reveal-top">
+              <div className="git-metric-card text-center">
+                <div className="git-metric-icon"><i className="fas fa-history"></i></div>
+                <h3 className="git-metric-value">{gitStats.isLoading ? <span className="spinner-border spinner-border-sm text-secondary"></span> : gitStats.contributions}</h3>
+                <p className="git-metric-label">Total Commits</p>
+              </div>
+            </div>
+
+            <div className="col-6 col-md-3 reveal reveal-bottom">
+              <div className="git-metric-card text-center">
+                <div className="git-metric-icon"><i className="fas fa-users"></i></div>
+                <h3 className="git-metric-value">{gitStats.isLoading ? <span className="spinner-border spinner-border-sm text-secondary"></span> : gitStats.followers}</h3>
+                <p className="git-metric-label">Followers</p>
+              </div>
+            </div>
+
+            <div className="col-6 col-md-3 reveal reveal-right">
+              <div className="git-metric-card text-center">
+                <div className="git-metric-icon"><i className="fas fa-star"></i></div>
+                <h3 className="git-metric-value">{gitStats.isLoading ? <span className="spinner-border spinner-border-sm text-secondary"></span> : gitStats.stars}</h3>
+                <p className="git-metric-label">Stars Earned</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Heatmap Graph */}
+          <div className="row mb-5 reveal reveal-zoom">
+            <div className="col-12">
+              <div className="git-heatmap-container p-4 text-center">
+                <h4 className="mb-4 text-start"><i className="fab fa-github me-2"></i>Contributions Calendar</h4>
+                <div className="git-heatmap-scroll">
+                  <img 
+                    src="https://ghchart.rshah.org/a3b8cc/Ashwin2209" 
+                    alt="Ashwin's GitHub Contributions Calendar" 
+                    className="git-heatmap-img"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Top Repositories from GitHub */}
+          <div className="reveal reveal-bottom">
+            <div className="git-repos-header d-flex justify-content-between align-items-center mb-4">
+              <h4 className="m-0"><i className="fas fa-folder-open me-2"></i>Active Repositories</h4>
+              <a href="https://github.com/Ashwin2209" target="_blank" rel="noreferrer" className="btn btn-outline-custom btn-sm">
+                View Profile <i className="fas fa-external-link-alt ms-1"></i>
+              </a>
+            </div>
+            
+            <div className="row g-4">
+              {gitStats.isLoading ? (
+                [1, 2, 3].map(n => (
+                  <div key={n} className="col-md-4 col-sm-6">
+                    <div className="git-repo-card loading-card">
+                      <div className="skeleton-line title"></div>
+                      <div className="skeleton-line desc"></div>
+                      <div className="skeleton-line footer"></div>
+                    </div>
+                  </div>
+                ))
+              ) : gitStats.reposList.length === 0 ? (
+                <div className="col-12 text-center py-4">
+                  <p className="text-muted">No repositories found or API rate limit exceeded.</p>
+                </div>
+              ) : (
+                gitStats.reposList.map(repo => (
+                  <div key={repo.id} className="col-md-4 col-sm-6">
+                    <div className="git-repo-card">
+                      <div className="git-repo-header d-flex justify-content-between align-items-start">
+                        <h5 className="git-repo-title">{repo.name}</h5>
+                        <a href={repo.html_url} target="_blank" rel="noreferrer" className="git-repo-link">
+                          <i className="fab fa-github"></i>
+                        </a>
+                      </div>
+                      <p className="git-repo-desc">
+                        {repo.description || "No description provided."}
+                      </p>
+                      <div className="git-repo-footer d-flex justify-content-between align-items-center mt-3">
+                        <span className="git-repo-lang">
+                          <span className="lang-dot" style={{ backgroundColor: getLanguageColor(repo.language) }}></span>
+                          {repo.language || "Plain Text"}
+                        </span>
+                        <span className="git-repo-stars">
+                          <i className="fas fa-star me-1 text-warning"></i>{repo.stargazers_count}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PROJECTS ===== */}
       <section id="projects" className="section-padding">
         <div className="container">
           <div className="mb-5 text-center reveal reveal-zoom">
@@ -565,6 +1030,42 @@ function App() {
         </div>
       </section>
 
+      {/* ===== ACHIEVEMENTS & CERTIFICATIONS ===== */}
+      <section id="achievements" className="section-padding">
+        <div className="container">
+          <div className="mb-5 text-center reveal reveal-zoom">
+            <h2>Achievements & Certifications</h2>
+            <div className="divider mx-auto"></div>
+          </div>
+          <div className="row g-4">
+            {certificatesData.map((cert, index) => (
+              <div
+                key={cert.id}
+                className={`col-lg-4 col-md-6 reveal ${['reveal-left', 'reveal-zoom', 'reveal-right'][index % 3]}`}
+              >
+                <div className="achievement-card" onClick={() => setActiveCert(cert)}>
+                  <div className="achievement-icon-wrap">
+                    <i className={cert.icon}></i>
+                  </div>
+                  <h4>{cert.title}</h4>
+                  <p className="achievement-org">{cert.org}</p>
+                  <p className="achievement-desc">{cert.description}</p>
+                  <div className="achievement-footer">
+                    <span className="achievement-date">
+                      <i className="far fa-calendar-alt me-2"></i>{cert.date}
+                    </span>
+                    <span className="achievement-view-btn">
+                      View Certificate <i className="fas fa-arrow-right ms-1"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CONTACT ===== */}
       <section id="contact" className="section-padding">
         <div className="container">
           <div className="row justify-content-center">
@@ -589,9 +1090,10 @@ function App() {
         </div>
       </section>
 
-      <footer>
+      {/* ===== FOOTER ===== */}
+      <footer className="footer-minimal">
         <div className="container">
-          <small>&copy; 2025 Ashwinkumar. Built with Professionalism & React.</small>
+          <small>&copy; 2025 Ashwinkumar. Built with Professionalism &amp; React.</small>
         </div>
       </footer>
     </>
