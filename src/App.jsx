@@ -633,7 +633,7 @@ function App() {
               </div>
             </div>
             <div className="col-lg-6 text-center animate-hero delay-200 parallax-element" data-parallax="-4">
-              <img src="/image.jpg" alt="Profile" className="profile-img" />
+              <img src="/hero.jpg" alt="Profile" className="profile-img" />
             </div>
           </div>
         </div>
